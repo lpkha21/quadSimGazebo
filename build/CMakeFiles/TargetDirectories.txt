@@ -1,0 +1,3 @@
+/home/luka/sitl_quad/build/CMakeFiles/sitl_firmware.dir
+/home/luka/sitl_quad/build/CMakeFiles/edit_cache.dir
+/home/luka/sitl_quad/build/CMakeFiles/rebuild_cache.dir

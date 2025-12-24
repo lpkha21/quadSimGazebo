@@ -1,0 +1,1 @@
+/usr/bin/g++ -g CMakeFiles/sitl_firmware.dir/main.cpp.o CMakeFiles/sitl_firmware.dir/motor_sender.cpp.o CMakeFiles/sitl_firmware.dir/rc.cpp.o CMakeFiles/sitl_firmware.dir/pid.cpp.o CMakeFiles/sitl_firmware.dir/imu.cpp.o -o sitl_firmware  -lgz-transport -luuid -lgz-msgs -lprotobuf -lgz-math -lgz-utils -ltinyxml2 -lpthread -lm 

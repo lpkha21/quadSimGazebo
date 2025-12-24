@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/home/luka/sitl_quad/build",
+  "command": "/usr/bin/g++  -I/home/luka/sitl_quad/sitl_firmware -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/transport15 -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/cmake5 -I/usr/include/uuid -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/utils4 -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/msgs12 -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/math9 -I/usr/include/pgm-5.3 -I/usr/include/libxml2 -g -std=gnu++17 -Wall -Wextra -Wpedantic -std=c++17 -isystem /usr/include/mit-krb5 -o CMakeFiles/sitl_firmware.dir/main.cpp.o -c /home/luka/sitl_quad/sitl_firmware/main.cpp",
+  "file": "/home/luka/sitl_quad/sitl_firmware/main.cpp",
+  "output": "CMakeFiles/sitl_firmware.dir/main.cpp.o"
+},
+{
+  "directory": "/home/luka/sitl_quad/build",
+  "command": "/usr/bin/g++  -I/home/luka/sitl_quad/sitl_firmware -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/transport15 -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/cmake5 -I/usr/include/uuid -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/utils4 -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/msgs12 -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/math9 -I/usr/include/pgm-5.3 -I/usr/include/libxml2 -g -std=gnu++17 -Wall -Wextra -Wpedantic -std=c++17 -isystem /usr/include/mit-krb5 -o CMakeFiles/sitl_firmware.dir/motor_sender.cpp.o -c /home/luka/sitl_quad/sitl_firmware/motor_sender.cpp",
+  "file": "/home/luka/sitl_quad/sitl_firmware/motor_sender.cpp",
+  "output": "CMakeFiles/sitl_firmware.dir/motor_sender.cpp.o"
+},
+{
+  "directory": "/home/luka/sitl_quad/build",
+  "command": "/usr/bin/g++  -I/home/luka/sitl_quad/sitl_firmware -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/transport15 -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/cmake5 -I/usr/include/uuid -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/utils4 -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/msgs12 -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/math9 -I/usr/include/pgm-5.3 -I/usr/include/libxml2 -g -std=gnu++17 -Wall -Wextra -Wpedantic -std=c++17 -isystem /usr/include/mit-krb5 -o CMakeFiles/sitl_firmware.dir/rc.cpp.o -c /home/luka/sitl_quad/sitl_firmware/rc.cpp",
+  "file": "/home/luka/sitl_quad/sitl_firmware/rc.cpp",
+  "output": "CMakeFiles/sitl_firmware.dir/rc.cpp.o"
+},
+{
+  "directory": "/home/luka/sitl_quad/build",
+  "command": "/usr/bin/g++  -I/home/luka/sitl_quad/sitl_firmware -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/transport15 -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/cmake5 -I/usr/include/uuid -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/utils4 -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/msgs12 -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/math9 -I/usr/include/pgm-5.3 -I/usr/include/libxml2 -g -std=gnu++17 -Wall -Wextra -Wpedantic -std=c++17 -isystem /usr/include/mit-krb5 -o CMakeFiles/sitl_firmware.dir/pid.cpp.o -c /home/luka/sitl_quad/sitl_firmware/pid.cpp",
+  "file": "/home/luka/sitl_quad/sitl_firmware/pid.cpp",
+  "output": "CMakeFiles/sitl_firmware.dir/pid.cpp.o"
+},
+{
+  "directory": "/home/luka/sitl_quad/build",
+  "command": "/usr/bin/g++  -I/home/luka/sitl_quad/sitl_firmware -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/transport15 -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/cmake5 -I/usr/include/uuid -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/utils4 -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/msgs12 -I/usr/lib/x86_64-linux-gnu/pkgconfig/../../../include/gz/math9 -I/usr/include/pgm-5.3 -I/usr/include/libxml2 -g -std=gnu++17 -Wall -Wextra -Wpedantic -std=c++17 -isystem /usr/include/mit-krb5 -o CMakeFiles/sitl_firmware.dir/imu.cpp.o -c /home/luka/sitl_quad/sitl_firmware/imu.cpp",
+  "file": "/home/luka/sitl_quad/sitl_firmware/imu.cpp",
+  "output": "CMakeFiles/sitl_firmware.dir/imu.cpp.o"
+}
+]
