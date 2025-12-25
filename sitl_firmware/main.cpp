@@ -18,12 +18,15 @@ static inline float deg2rad(float d) { return d * 0.01745329252f; }
 struct RatePID {
     float kp=0, ki=0, kd=0;
     float integrator=0;
-    float i_limit=0.3f;
+    float i_limit=0.2f;
     float prev_meas = 0.0f;
     float d_filt = 0.0f;
     float d_cutoff = 30.0f; // Hz, safe starting point
+    float integrator_coeff = 0.998f;
 
     float update(float sp, float meas, float dt) {
+        integrator *= integrator_coeff;
+
         float err = sp - meas;
         integrator += ki * err * dt;
         integrator = clampf(integrator, -i_limit, i_limit);
@@ -42,9 +45,10 @@ struct RatePID {
         return p + i + d;
     }
 
-    void reset() { 
+    void reset(float meas) { 
         integrator = 0.0f; 
         d_filt = 0;
+        prev_meas = meas;
     }
 };
 
@@ -95,12 +99,24 @@ int main()
     // Rate limits
     const float MAX_ROLL_RATE  = deg2rad(180.0f);
     const float MAX_PITCH_RATE = deg2rad(180.0f);
-    const float MAX_YAW_RATE   = deg2rad(200.0f);
+    const float MAX_YAW_RATE   = deg2rad(220.0f);
 
     // PID gains (starter)
-    RatePID pid_r{0.05f, 0.001f, 0.0005f};
-    RatePID pid_p{0.05f, 0.001f, 0.0005f};
-    RatePID pid_y{0.2f, 0.0005f,  0.0f};
+    const float kpr = 0.28f;//0.37
+    const float kir = 0.007f;
+    const float kdr = 0.0065f;
+
+    const float kpy = 0.18f;
+    const float kiy = 0.01f;
+    const float kdy = 0.0f;
+    RatePID pid_r{kpr, kir, kdr};
+    RatePID pid_p{kpr, kir, kdr};
+    RatePID pid_y{kpy, kiy, kdy}; // yaw D off initially
+    pid_r.d_cutoff = 30.0f;
+    pid_p.d_cutoff = 30.0f;
+    pid_y.d_cutoff = 20.0f;
+    pid_y.integrator_coeff = 0.995f;
+
 
     LowPassFilter gyro_lpf_x(80.0f);   // roll gyro LPF
     LowPassFilter gyro_lpf_y(80.0f);   // pitch gyro LPF
@@ -145,9 +161,9 @@ int main()
 
         // Reset integrators when disarmed / low throttle
         if (t < 0.05f) {
-            pid_r.reset();
-            pid_p.reset();
-            pid_y.reset();
+            pid_r.reset(gx);
+            pid_p.reset(gy);
+            pid_y.reset(gz);
 
             gyro_lpf_x.reset(s.gx);
             gyro_lpf_y.reset(s.gy);
@@ -160,14 +176,16 @@ int main()
         float u_y = pid_y.update(yaw_sp,   gz, dt);
 
         // Scale PID outputs into mixer space
-        const float MIX_SCALE = 0.25f;
-        float r = clampf(u_r * MIX_SCALE, -0.4f, 0.4f);
-        float p = clampf(u_p * MIX_SCALE, -0.4f, 0.4f);
-        float y = clampf(u_y * MIX_SCALE, -0.3f, 0.3f);
+        const float MIX_SCALE = 1.0f;
+        static const float clamprp = 0.4f;
+        static const float clampy = 0.2f;
+        float r = clampf(u_r * MIX_SCALE, -clamprp, clamprp);
+        float p = clampf(u_p * MIX_SCALE, -clamprp, clamprp);
+        float y = clampf(u_y * MIX_SCALE, -clampy, clampy);
 
         // x500 mixer
         // [0]=FR, [1]=BL, [2]=FL, [3]=BR
-        //y = 0; // TODO:YAW DISABLED
+        // y = 0.0f; //YAW disabled
         std::array<float,4> m;
         m[0] = t - r - p + y;
         m[1] = t + r + p + y;
