@@ -13,16 +13,19 @@ static inline float clampf(float v, float lo, float hi) {
     return std::max(lo, std::min(hi, v));
 }
 static inline float clamp01(float v) { return clampf(v, 0.0f, 1.0f); }
-static inline float deg2rad(float d) { return d * 0.01745329252f; }
+constexpr float deg2rad(float d) { return d * 0.01745329252f; }
 
 struct RatePID {
-    float kp=0, ki=0, kd=0;
-    float integrator=0;
-    float i_limit=0.2f;
+    float kp = 0, ki = 0, kd = 0;
+    float integrator = 0;
+    float i_limit = 0.2f;
     float prev_meas = 0.0f;
     float d_filt = 0.0f;
     float d_cutoff = 30.0f; // Hz, safe starting point
     float integrator_coeff = 0.998f;
+
+    // Precomputed constant for d_cutoff
+    float rc = 1.0f / (2.0f * M_PI * d_cutoff);
 
     float update(float sp, float meas, float dt) {
         integrator *= integrator_coeff;
@@ -33,8 +36,8 @@ struct RatePID {
 
         float d_meas = (meas - prev_meas) / dt;
         prev_meas = meas;
-        float rc = 1.0f / (2.0f * M_PI * d_cutoff);
-        
+
+        // Precompute alpha for better performance
         float alpha = dt / (dt + rc);
         d_filt += alpha * (d_meas - d_filt);
 
@@ -45,8 +48,8 @@ struct RatePID {
         return p + i + d;
     }
 
-    void reset(float meas) { 
-        integrator = 0.0f; 
+    void reset(float meas) {
+        integrator = 0.0f;
         d_filt = 0;
         prev_meas = meas;
     }
@@ -58,7 +61,10 @@ struct LowPassFilter {
     float state = 0.0f;
     bool initialized = false;
 
-    LowPassFilter(float cutoff) : cutoff_hz(cutoff) {}
+    // Precomputed constant for cutoff frequency
+    float rc;
+
+    LowPassFilter(float cutoff) : cutoff_hz(cutoff), rc(1.0f / (2.0f * M_PI * cutoff)) {}
 
     float apply(float input, float dt) {
         if (!initialized) {
@@ -66,7 +72,6 @@ struct LowPassFilter {
             initialized = true;
             return input;
         }
-        float rc = 1.0f / (2.0f * M_PI * cutoff_hz);
         float alpha = dt / (dt + rc);
         state += alpha * (input - state);
         return state;
@@ -97,9 +102,9 @@ int main()
     motors.start(); // ensure topic = /x500/command/motor_speed
 
     // Rate limits
-    const float MAX_ROLL_RATE  = deg2rad(180.0f);
-    const float MAX_PITCH_RATE = deg2rad(180.0f);
-    const float MAX_YAW_RATE   = deg2rad(220.0f);
+    constexpr float MAX_ROLL_RATE  = deg2rad(180.0f);
+    constexpr float MAX_PITCH_RATE = deg2rad(180.0f);
+    constexpr float MAX_YAW_RATE   = deg2rad(220.0f);
 
     // PID gains (starter)
     const float kpr = 0.28f;//0.37
@@ -150,7 +155,7 @@ int main()
 
         // RC → rate setpoints
         float t_stick = clamp01(rc.throttle());   // 0..1
-        const float IDLE_THRUST = 0.05f;
+        constexpr float IDLE_THRUST = 0.05f;
 
         // motors OFF below tiny threshold, else idle + collective
         float t = (t_stick < 0.02f) ? 0.0f : (IDLE_THRUST + (1.0f - IDLE_THRUST) * t_stick);
@@ -176,9 +181,9 @@ int main()
         float u_y = pid_y.update(yaw_sp,   gz, dt);
 
         // Scale PID outputs into mixer space
-        const float MIX_SCALE = 1.0f;
-        static const float clamprp = 0.4f;
-        static const float clampy = 0.2f;
+        constexpr float MIX_SCALE = 1.0f;
+        constexpr float clamprp = 0.4f;
+        constexpr float clampy = 0.2f;
         float r = clampf(u_r * MIX_SCALE, -clamprp, clamprp);
         float p = clampf(u_p * MIX_SCALE, -clamprp, clamprp);
         float y = clampf(u_y * MIX_SCALE, -clampy, clampy);
@@ -186,18 +191,19 @@ int main()
         // x500 mixer
         // [0]=FR, [1]=BL, [2]=FL, [3]=BR
         // y = 0.0f; //YAW disabled
-        std::array<float,4> m;
-        m[0] = t - r - p + y;
-        m[1] = t + r + p + y;
-        m[2] = t + r - p - y;
-        m[3] = t - r + p - y;
+        std::array<float,4> m = {
+            t - r - p + y,
+            t + r + p + y,
+            t + r - p - y,
+            t - r + p - y
+        };
 
         // Normalize & clamp
         float maxv = *std::max_element(m.begin(), m.end());
         if (maxv > 1.0f) {
             for (auto &v : m) v /= maxv;
         }
-        
+
         std::array<float,4> omega;
         for (int i=0;i<4;i++) {
             omega[i] = clamp01(m[i]);

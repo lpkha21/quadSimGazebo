@@ -6,8 +6,8 @@
 using namespace std::chrono_literals;
 
 constexpr float MOTOR_MIN_RAD_S = 0.0f;
-constexpr float MOTOR_HOVER_RAD_S = 800.0f;
-constexpr float MOTOR_MAX_RAD_S = 1300.0f;
+constexpr float MOTOR_HOVER_RAD_S = 830.0f;
+constexpr float MOTOR_MAX_RAD_S = 1500.0f;
 
 MotorSender::MotorSender()
   : node_(std::make_unique<gz::transport::Node>())

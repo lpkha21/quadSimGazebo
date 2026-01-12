@@ -1,46 +1,78 @@
 <?xml version="1.0" ?>
 <sdf version="1.7">
+  <world name="empty">
 
-  <world name="default">
+    <!-- Systems -->
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
 
-    <!-- REQUIRED SYSTEMS -->
-    <plugin
-      filename="gz-sim-physics-system"
-      name="gz::sim::systems::Physics"/>
-
-    <plugin
-      filename="gz-sim-sensors-system"
-      name="gz::sim::systems::Sensors"/>
-
-    <plugin
-      filename="gz-sim-user-commands-system"
-      name="gz::sim::systems::UserCommands"/>
-
-    <plugin
-      filename="gz-sim-scene-broadcaster-system"
-      name="gz::sim::systems::SceneBroadcaster"/>
-
-    <plugin filename="gz-sim-imu-system"
-        name="gz::sim::systems::Imu"/>
-
-    
-    <!-- Physics settings -->
     <physics type="ode">
       <max_step_size>0.001</max_step_size>
-      <real_time_update_rate>1</real_time_update_rate>
+      <real_time_update_rate>1000</real_time_update_rate>
     </physics>
 
-    <include>
-      <uri>model://sun</uri>
-    </include>
+    <gravity>0 0 -9.8</gravity>
 
-    <include>
-      <uri>model://ground_plane</uri>
-    </include>
+    <scene>
+      <grid>false</grid>
+      <ambient>0.7 0.7 0.7 1</ambient>
+      <background>0.75 0.85 0.95 1</background>
+      <shadows>true</shadows>
+    </scene>
 
+    <light name="sun" type="directional">
+      <pose>0 0 500 0 0 0</pose>
+      <direction>0.3 0.4 -1</direction>
+      <diffuse>1 1 1 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+    </light>
+
+    <!-- TEXTURED GROUND (PBR ONLY, NO OGRE) -->
+    <model name="grass_ground">
+      <static>true</static>
+      <pose>0 0 -0.01 0 0 0</pose>
+
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>500 500</size>
+            </plane>
+          </geometry>
+        </collision>
+
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>500 500</size>
+            </plane>
+          </geometry>
+
+          <material>
+            <pbr>
+              <metal>
+                <albedo_map>
+                  file:///home/luka/sitl_quad/worlds/media/materials/textures/grass.jpg
+                </albedo_map>
+                <roughness>1.0</roughness>
+                <metalness>0.0</metalness>
+              </metal>
+            </pbr>
+            <emissive>0.15 0.15 0.15 1</emissive>
+            <double_sided>true</double_sided>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Drone -->
     <include>
       <uri>model://x500</uri>
-      <pose>0 0 0.2 0 0 0</pose>
+      <pose>0 0 0.3 0 0 0</pose>
     </include>
 
   </world>
