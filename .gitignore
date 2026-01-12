@@ -1,0 +1,65 @@
+# =========================
+# Build artifacts
+# =========================
+build/
+build-*/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# =========================
+# Binaries
+# =========================
+*.o
+*.a
+*.so
+*.so.*
+*.out
+*.elf
+sitl_firmware
+
+# =========================
+# Gazebo / gz-sim
+# =========================
+*.log
+*.db
+*.state
+*.world.log
+~/.gazebo/
+~/.ignition/
+~/.gz/
+
+# =========================
+# IDE / Editor files
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# =========================
+# OS-generated files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# =========================
+# Misc
+# =========================
+*.tmp
+*.bak
+*.cache
